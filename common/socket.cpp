@@ -34,11 +34,14 @@ public:
 
   //create socket
   virtual void createSocket(); 
-
-  int getSt() { return m_St; }
-
+  
   //client socket need achieve this function
-  virtual void connectServer();
+  virtual bool connectServer();
+protect:
+  void setSt(int iSt) { m_St = iSt; }
+  int getSt() { return m_St; }
+  void setPort(int iPort) { m_Port = iPort; }
+  int getPort() { return m_Port; }
 
 };
 
