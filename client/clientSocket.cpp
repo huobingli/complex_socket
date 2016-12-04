@@ -4,11 +4,11 @@
 //       FileName:      clientSocket.cpp
 //
 //       Author:  huobingli - huobingli@outlook.com
-//       Description:    
+//       Description:
 //       Create: 2016-12-02  12:49:32
 //       Last Modified: 2016-12-02 12:49:32
 //********************************************************
-// 
+//
 #include <iostream>
 #include <time.h>
 #include <iostream>
@@ -49,7 +49,7 @@ public:
     memset(&m_ClientAddr, 0, sizeof(m_ClientAddr));
   }
   ~clientSocket() { }
-  
+
   void setIPPort(char *pIPAddress, int iIPLength, int iPort) {
     memcpy((char *)m_IPAddress, pIPAddress, iIPLength);
     m_Port = iPort;
@@ -62,12 +62,12 @@ public:
       std::cout<<"setsocket failed"<<strerror(errno)<<std::endl;
     } else { std::cout<<"createSocket successed!! socket is "<<m_Socket<<std::endl; }
   }
-  
+
   bool connectServer() {
     m_ClientAddr.sin_family = AF_INET;
     m_ClientAddr.sin_port = htons(m_Port);
     m_ClientAddr.sin_addr.s_addr = inet_addr((char*)m_IPAddress);
-    
+
     std::cout<<"IP"<<m_IPAddress<<std::endl;
     std::cout<<"sizeof"<<strlen((char*)m_IPAddress)<<std::endl;
     int iConnect = connect(m_Socket, (struct sockaddr *) &m_ClientAddr, sizeof(m_ClientAddr));
@@ -94,12 +94,14 @@ public:
     }
   }
   int getSt() { return m_Socket; }
+
+  
   static void *sendSocket(void *arg) {
      std::cout<<"发送启动"<<std::endl;
      int st = *(int *)arg;
-     std::cout<<st<<std::endl;    
+     std::cout<<st<<std::endl;
      char sendBuffer[128];
-     
+
      while(1) {
        if(flag == 0) break;
        memset(sendBuffer, 0, sizeof(sendBuffer));
