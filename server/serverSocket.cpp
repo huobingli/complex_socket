@@ -13,10 +13,10 @@
 
 #ifndef PARAM
 #define PARAM
-	#include "param.h"
+//	#include "param.h"
 #endif
 using namespace std;
-
+#define MAXSIZE 256
 #ifndef _SERVERSOCKET_CPP
 #define _SERVERSOCKET_CPP
 
@@ -52,12 +52,15 @@ public:
 		}
 	}
 
-	int acceptSocket(int iListenSt) {
+	int acceptSocket(int iListenSt, struct sockaddr_in &sSockaddr) {
 		struct sockaddr_in client_addr;
 		socklen_t len = sizeof(client_addr);
 		memset(&client_addr, 0, sizeof(client_addr));
 
 		int client_st = accept(iListenSt, (struct sockaddr *) &client_addr, &len);
+		
+		memcpy(&sSockaddr, (struct sockaddr_in*)&client_addr, len);
+
 		if(client_st < 0) {
 			cout<<"accept failed"<<strerror(errno);
 		} else {
@@ -73,7 +76,7 @@ public:
 
 	void recvSocket(int ist, char *buffer) {
 		char recvBuffer[MAXSIZE];
-		memset(recvBuffer, 0, sizeof(recvBuffer));
+		memset(&recvBuffer, 0, sizeof(recvBuffer));
 		ssize_t rc = recv(ist, recvBuffer, sizeof(recvBuffer), 0);
 		recvBuffer[MAXSIZE + 1] = '\0';
 		cout<<"recv data rc NUM: " <<rc<<endl;

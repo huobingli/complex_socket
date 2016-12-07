@@ -4,28 +4,34 @@
 #include "queuePool.cpp"
 #include "serverSocket.cpp"
 #include "epoll.cpp"
+#include "onlineDevice.cpp"
+
 
 using namespace std;
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-cacheLinkTable *sendTable;
-cacheLinkTable *recvTable;
+cacheTable *sendTable;
+cacheTable *recvTable;
+onlineDevice *onlineTable;
+
 
 struct serverRecv {
 	serverSocket *serverSt;
 	epoll *serverEpoll;
-	cacheLinkTable *pLinkTable;
+	cacheTable *pLinkTable;
+	onlineDevice *onlineDeviceTable;
 };
 
 struct serverSend {
-	cacheLinkTable *pLinkTable;
+	cacheTable *pLinkTable;
 };
 
 struct serverAnal {
-	cacheLinkTable *pSendTable;
-	cacheLinkTable *pRecvTable;
+	cacheTable *pSendTable;
+	cacheTable *pRecvTable;
+	onlineDevice *onlineDeviceTable;
 };
 
 struct runner
@@ -127,14 +133,16 @@ public:
 	}
 
   //gouzao
-	threadPool(int threadNum, cacheLinkTable *pSendTable, cacheLinkTable *pRecvTable) {
+	threadPool(int threadNum, cacheTable *pSendTable, cacheTable *pRecvTable, onlineDevice *pOnlineTable) {
 		//thread queue linkTable
 
 		sendTable = pSendTable;
 		recvTable = pRecvTable;
+		onlineTable = pOnlineTable;
 
 		cout<<"const threadPool"<<sendTable->getNodeNum()<<endl;
 		cout<<"const threadPool"<<recvTable->getNodeNum()<<endl;
+		cout<<"const threadPool"<<pOnlineTable->getOnLineNum()<<endl;
 		runnerHead = NULL;
 		runnerTail = NULL;
 		//thread pool threads
@@ -189,11 +197,11 @@ public:
 
 	}
 
-	void setSendTable(cacheLinkTable *linkTable) {
+	void setSendTable(cacheTable *linkTable) {
 		sendTable = linkTable;
 	}
 
-	void setRecvTable(cacheLinkTable *linkTable) {
+	void setRecvTable(cacheTable *linkTable) {
 		recvTable = linkTable;
 	}
 
