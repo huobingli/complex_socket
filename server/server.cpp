@@ -31,7 +31,11 @@ static void *epollRecv(void *arg) {
   serverRecv *balabala = (struct serverRecv *) arg;
   serverSocket *serverSt = (*balabala).serverSt;
   epoll *serverEpoll = (*balabala).serverEpoll;
+<<<<<<< HEAD
   cacheLinkTable *recvTable = (*balabala).pLinkTable;
+=======
+  cacheTable *recvTable = (*balabala).pLinkTable;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
   onlineDevice *onlineDeviceTable = (*balabala).onlineDeviceTable;
   //得到服务器端监听socket
   int listen_st = serverSt->getst();
@@ -53,7 +57,7 @@ static void *epollRecv(void *arg) {
     cout<<"发生了 : "<<nfds<<"个事件"<<endl;
     if(nfds == -1) {
       cout<<"epoll wait failed"<<strerror(errno);
-      breadk;
+      break;
     }
 
     int i;
@@ -73,7 +77,11 @@ static void *epollRecv(void *arg) {
         st = serverSt->acceptSocket(listen_st, acceptSockAddr);
 
         //插入到在线列表中
+<<<<<<< HEAD
         onlineDeviceTable->insertArray(st, acceptSockAddr);
+=======
+        onlineDeviceTable->insertArray(st, &acceptSockAddr);
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 
         cout<<"recv st = "<<st<<"; and listen_st = "<<listen_st<<endl;
         cout<<"在线列表人数"<<onlineDeviceTable->getOnLineNum()<<endl;
@@ -110,8 +118,13 @@ static void *epollRecv(void *arg) {
         }
         //收到消息
         if(strlen(buffer) > 0) {
+<<<<<<< HEAD
           cout<<"from "<<st<<" recv buffer : "<<buffer <<endl;
           cacheLinkNode *cacheNode = new cacheLinkNode();
+=======
+          /*cout<<"from "<<st<<" recv buffer : "<<buffer <<endl;
+          cacheNode *cacheNode = new cacheNode();
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
           cacheNode->setst(st);
           cacheNode->setbuffer(buffer);
 
@@ -120,18 +133,18 @@ static void *epollRecv(void *arg) {
           recvTable->insertNode(cacheNode);
           pthread_mutex_unlock(&RecvMutex);
           cout<<"接收队列已经解锁，等待中"<<endl;
-
+	  */
           cout<<"end analyze recvTable Node NUM  "<<recvTable->getNodeNum()<<endl;
         }
       }
       //socket error
       if(events & EPOLLERR) {
-        st = serverSt->acceptSocket(listen_st);
+        st = serverSt->acceptSocket(listen_st, acceptSockAddr);
         close(st);
       }
       //socket unlinked
       if(events & EPOLLHUP) {
-        st = serverSt->acceptSocket(listen_st);
+        st = serverSt->acceptSocket(listen_st, acceptSockAddr);
         close(st);
       }
     }
@@ -142,7 +155,11 @@ static void *epollRecv(void *arg) {
 int main () {
   // new send recv queue
   queuePool * pQueuePool = new queuePool();
+<<<<<<< HEAD
   onlineDevice *pOnlineDevice = new onlineDevice();
+=======
+  onlineDevice *pOnlineDevice = new onlineDevice(2);
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
   // init server listen socket
 
   recvOprate.serverSt = new serverSocket(10000);
@@ -167,7 +184,11 @@ int main () {
   pthread_t thrd1, thrd2, thrd3, thrd4;
   //启动接收线程
   pthread_create(&thrd1, NULL, epollRecv, &recvOprate);
+<<<<<<< HEAD
   pthread_create(&thrd3, NULL, epollAnalyze, &doubleOperate);
+=======
+//  pthread_create(&thrd3, NULL, epollAnalyze, NULL);
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
   //pthread_create(&thrd2, NULL, epollSend, &sendOprate);
 
   //启动线程池

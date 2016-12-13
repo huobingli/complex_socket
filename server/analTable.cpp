@@ -9,12 +9,7 @@
 //       Last Modified: 2016-12-07 13:17:35
 //********************************************************
 
-<<<<<<< HEAD
 
-=======
-#include <netinet/in.h>
-#include <string.h>
->>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 #ifndef _CACHETABLE_CPP_
 #define _CACHETABLE_CPP_
 
@@ -36,20 +31,12 @@ private:
 	bool fullQueue() { return m_NodeNum == m_TotalNum; }
 	bool emptyQueue() { return m_NodeNum == 0; }
 public:
-<<<<<<< HEAD
 	CQueueControl(int iNodeNum) {
-=======
-	cacheTable(int iNodeNum) {
->>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 		m_NodeNum = 0;
 		m_TotalNum = iNodeNum;
 		memset(m_QueueTable, 0, sizeof(cacheNode) * 20);
 	}
-<<<<<<< HEAD
 	~CQueueControl() {}
-=======
-	~cacheTable() {}
->>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 	bool insertQueueNode(cacheNode *pQueueNode) {
 		if(fullQueue()) { return false; }
 		else {	
@@ -96,10 +83,6 @@ public:
 	void resetArray() {
 		memset(m_GetArray, 0, sizeof(m_GetArray));
 	}
-<<<<<<< HEAD
-=======
-	int getNodeNum() { return m_NodeNum; }
->>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 };
 
 #endif

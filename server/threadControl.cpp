@@ -14,7 +14,7 @@ struct classpoint {
 static void epollSend(void *arg) {
 	cout<<"发送线程启动"<<endl;
 	struct serverAnal *balabala = (struct serverAnal*)arg;
-	cacheLinkTable *psendTable = (*balabala).pSendTable;
+	cacheTable *psendTable = (*balabala).pSendTable;
 
 
 	while(1){
@@ -22,7 +22,7 @@ static void epollSend(void *arg) {
 		cout<<"send sendLinkTable Node NUM  "<<psendTable->getNodeNum()<<endl;
 		if(psendTable->getNodeNum() > 0)
 		{
-
+/*
 			cout<<"有"<<psendTable->getNodeNum()<<"条要发送"<<endl;
 
 			pthread_mutex_lock(&SendMutex);
@@ -40,7 +40,7 @@ static void epollSend(void *arg) {
 			tempNode->getbuffer(buffer);
 			send(st, buffer, strlen(buffer), 0);
 
-			cout<<"已经向"<<st<<"发送了"<<buffer<<endl;
+			cout<<"已经向"<<st<<"发送了"<<buffer<<endl;*/
 		}
 	}
 }
@@ -48,23 +48,35 @@ static void epollSend(void *arg) {
 /***********************************************************************/
 static void epollAnalyze(void *arg) {
 	cout<<"处理线程启动"<<endl;
+<<<<<<< HEAD
 	struct serverAnalyze *balabala = (struct serverAnalyze *)arg;
 	cacheLinkTable *sendTable = (*balabala).pSendTable;
 	cacheLinkTable *recvTable = (*balabala).pRecvTable;
 	onlineDevice *pOnlineDevice = (*balabala).onlineDeviceTable;
+=======
+	//struct serverAnalyze *balabala = (struct serverAnalyze *)arg;
+	//cacheTable *sendTable = (*balabala).pSendTable;
+	//cacheTable *recvTable = (*balabala).pRecvTable;
+	//onlineDevice *pOnlineDevice = (*balabala).onlineDeviceTable;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 
 	char buffer[MAXSIZE];
 	memset(&buffer, 0, sizeof(buffer));
 	serverAnalyze *pServerAnalyze = new serverAnalyze();
 	while(1){
+
 		//cout<<"epoll analyze sendLinkTable Node NUM  "<<sendTable->getNodeNum()<<endl;
 		//cout<<"epoll analyze recvLinkTable Node NUM  "<<recvTable->getNodeNum()<<endl;
 
-		if(recvTable->getNodeNum() != 0) {
+/*		if(recvTable->getNodeNum() != 0) {
 
 			pthread_mutex_lock(&RecvMutex);
 			cout<<"正在处理一条信息"<<endl;
+<<<<<<< HEAD
 			cacheLinkNode *tempLinkNode = recvTable->getEndNode();
+=======
+			struct cacheNode tempCacheNode;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 			pthread_mutex_unlock(&RecvMutex);
 
 			//cacheLinkNode *insertSendTableNode = new cacheLinkNode();
@@ -72,7 +84,11 @@ static void epollAnalyze(void *arg) {
 			//------------------------------
 			//messageBuffer *message = new messageBuffer();
 
+<<<<<<< HEAD
 			tempLinkNode->getbuffer(buffer);
+=======
+			tempCacheNode
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 
 			if(buffer[0] == '1')
 				pOnlineDevice->searchNode();
@@ -98,7 +114,7 @@ static void epollAnalyze(void *arg) {
 
 		sleep(5);
 		//cout<<"epoll analyze end analyze sendLinkTable Node NUM  "<<sendTable->getNodeNum()<<endl;
-		//cout<<"epoll analyze end analyze recvLinkTable Node NUM  "<<recvTable->getNodeNum()<<endl;
+		//cout<<"epoll analyze end analyze recvLinkTable Node NUM  "<<recvTable->getNodeNum()<<endl;*/
 	}
 	cout<<"处理线程退出"<<endl;
 }
@@ -113,7 +129,11 @@ private:
 	int iThreadNum;
 	int shutdown;
 public:
+<<<<<<< HEAD
 	threadControl(int threadNum, cacheLinkTable *pSendTable, cacheLinkTable *pRecvTable, onlineDevice *pOnlineDevice) {
+=======
+	threadControl(int threadNum, cacheTable *pSendTable, cacheTable *pRecvTable, onlineDevice *pOnlineDevice) {
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 		iThreadNum = threadNum;
 		//cout<<"000"<<endl;
 		pThreadPool = new threadPool(iThreadNum, pSendTable, pRecvTable, pOnlineDevice);

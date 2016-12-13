@@ -12,25 +12,36 @@ using namespace std;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-cacheLinkTable *sendTable;
-cacheLinkTable *recvTable;
+cacheTable *sendTable;
+cacheTable *recvTable;
+onlineDevice *onlineTable;
+
 
 
 
 struct serverRecv {
 	serverSocket *serverSt;
 	epoll *serverEpoll;
+<<<<<<< HEAD
 	cacheLinkTable *pLinkTable;
+=======
+	cacheTable *pLinkTable;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 	onlineDevice *onlineDeviceTable;
 };
 
 struct serverSend {
-	cacheLinkTable *pLinkTable;
+	cacheTable *pLinkTable;
 };
 
 struct serverAnal {
+<<<<<<< HEAD
 	cacheLinkTable *pSendTable;
 	cacheLinkTable *pRecvTable;
+=======
+	cacheTable *pSendTable;
+	cacheTable *pRecvTable;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 	onlineDevice *onlineDeviceTable;
 };
 
@@ -133,7 +144,11 @@ public:
 	}
 
   //gouzao
+<<<<<<< HEAD
 	threadPool(int threadNum, cacheLinkTable *pSendTable, cacheLinkTable *pRecvTable, onlineDevice *pOnlineTable) {
+=======
+	threadPool(int threadNum, cacheTable *pSendTable, cacheTable *pRecvTable, onlineDevice *pOnlineTable) {
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 		//thread queue linkTable
 
 		sendTable = pSendTable;
@@ -197,11 +212,11 @@ public:
 
 	}
 
-	void setSendTable(cacheLinkTable *linkTable) {
+	void setSendTable(cacheTable *linkTable) {
 		sendTable = linkTable;
 	}
 
-	void setRecvTable(cacheLinkTable *linkTable) {
+	void setRecvTable(cacheTable *linkTable) {
 		recvTable = linkTable;
 	}
 

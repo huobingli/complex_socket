@@ -34,11 +34,19 @@ private:
   bool scanSame(int iSt) {
   	if(empty()) return false;
   	else {
+<<<<<<< HEAD
+=======
+//		cout<<222<<endl;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
   		for(int i = 0; i < m_onLineNum; i++) {
   			if(m_onLine[i].iSt == iSt) {
   				return true;
   			}
   		}
+<<<<<<< HEAD
+=======
+		return false;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
   	}
   }
 public:
@@ -49,6 +57,7 @@ public:
     m_TotalNum = iNum;
   }
   
+<<<<<<< HEAD
   ~onlineDevice() { free *m_onLine; }
 
   int getOnLineNum() { return m_onLineNum; }
@@ -62,6 +71,29 @@ public:
 	      	memcpy(m_onLine[m_onLineNUM].sOnlineInfo, pSocketAddr, sizeof(struct sockaddr_in));
 	      	m_onLine[m_onLineNum].isOnLine = true;
 	      	m_onLine[m_onLineNum].isNeedSave = true;
+=======
+  ~onlineDevice() { //free *m_onLine;
+  }
+
+  int getOnLineNum() { return m_onLineNum; }
+  void insertArray(int iSt, struct sockaddr_in *pSockAddr) {
+    cout<<iSt<<endl;
+    if(full()) { 
+	cout<<"manle manle manle "<<endl;
+	return; 
+    }
+    else {
+    	if(scanSame(iSt)) return;
+      	else {
+//		cout<<"1111"<<endl;
+	      	//插入到在线列表
+	      	m_onLine[m_onLineNum].iSt = iSt;
+	      	memcpy(&m_onLine[m_onLineNum].sOnlineInfo, pSockAddr, sizeof(struct sockaddr_in));
+		cout<<"saved ip "<<inet_ntoa(m_onLine[m_onLineNum].sOnlineInfo.sin_addr)<<endl;
+	      	
+		m_onLine[m_onLineNum].bIsOnLine = true;
+	      	m_onLine[m_onLineNum].bIsNeedSave = true;
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
 	      	m_onLineNum++;
       	}
     }
@@ -76,7 +108,11 @@ public:
 
   void searchNode(int iSt) {
   	for(int i = 0; i < m_onLineNum; i++) {
+<<<<<<< HEAD
   		if(m_onLine[i].st == iSt)
+=======
+  		if(m_onLine[i].iSt == iSt)
+>>>>>>> 5ef238650f41a5baca738e1df2f7ed65ee074aac
   			cout<<inet_ntoa(m_onLine[i].sOnlineInfo.sin_addr)<<endl;
   	}
   }
