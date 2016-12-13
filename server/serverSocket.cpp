@@ -52,12 +52,15 @@ public:
 		}
 	}
 
-	int acceptSocket(int iListenSt) {
+	int acceptSocket(int iListenSt, struct sockaddr_in &sSockaddr) {
 		struct sockaddr_in client_addr;
 		socklen_t len = sizeof(client_addr);
 		memset(&client_addr, 0, sizeof(client_addr));
 
 		int client_st = accept(iListenSt, (struct sockaddr *) &client_addr, &len);
+		
+		memcpy(sSockaddr, client_addr, len);
+
 		if(client_st < 0) {
 			cout<<"accept failed"<<strerror(errno);
 		} else {

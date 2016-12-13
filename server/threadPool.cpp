@@ -4,6 +4,8 @@
 #include "queuePool.cpp"
 #include "serverSocket.cpp"
 #include "epoll.cpp"
+#include "onlineDevice.cpp"
+
 
 using namespace std;
 
@@ -13,10 +15,13 @@ pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 cacheLinkTable *sendTable;
 cacheLinkTable *recvTable;
 
+
+
 struct serverRecv {
 	serverSocket *serverSt;
 	epoll *serverEpoll;
 	cacheLinkTable *pLinkTable;
+	onlineDevice *onlineDeviceTable;
 };
 
 struct serverSend {
@@ -26,6 +31,7 @@ struct serverSend {
 struct serverAnal {
 	cacheLinkTable *pSendTable;
 	cacheLinkTable *pRecvTable;
+	onlineDevice *onlineDeviceTable;
 };
 
 struct runner
@@ -127,14 +133,16 @@ public:
 	}
 
   //gouzao
-	threadPool(int threadNum, cacheLinkTable *pSendTable, cacheLinkTable *pRecvTable) {
+	threadPool(int threadNum, cacheLinkTable *pSendTable, cacheLinkTable *pRecvTable, onlineDevice *pOnlineTable) {
 		//thread queue linkTable
 
 		sendTable = pSendTable;
 		recvTable = pRecvTable;
+		onlineTable = pOnlineTable;
 
 		cout<<"const threadPool"<<sendTable->getNodeNum()<<endl;
 		cout<<"const threadPool"<<recvTable->getNodeNum()<<endl;
+		cout<<"const threadPool"<<pOnlineTable->getOnLineNum()<<endl;
 		runnerHead = NULL;
 		runnerTail = NULL;
 		//thread pool threads

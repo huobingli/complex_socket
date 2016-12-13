@@ -1,8 +1,10 @@
 #include <pthread.h>
 #include "threadPool.cpp"
 #include "serverAnalyze.cpp"
+#include "cacheTable.cpp"
 using namespace std;
 
+//
 pthread_mutex_t RecvMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t SendMutex = PTHREAD_MUTEX_INITIALIZER;
 struct classpoint {
@@ -18,17 +20,11 @@ static void epollSend(void *arg) {
 	while(1){
 		sleep(5);
 		cout<<"send sendLinkTable Node NUM  "<<psendTable->getNodeNum()<<endl;
-		//analyze->serverLinkTableAnalyze();
-		//cout<<"end analyze sendLinkTable Node NUM  "<<sendLinkTable->getNodeNum()<<endl;
-		//cout<<"end analyze recvLinkTable Node NUM  "<<recvLinkTable->getNodeNum()<<endl;
-
-		//cout<<1111<<endl;
 		if(psendTable->getNodeNum() > 0)
 		{
 
 			cout<<"有"<<psendTable->getNodeNum()<<"条要发送"<<endl;
 
-			//sleep(5);
 			pthread_mutex_lock(&SendMutex);
 			cout<<"发送队列已经加锁"<<endl;
 			cacheLinkNode *tempNode = psendTable->getEndNode();
@@ -42,7 +38,6 @@ static void epollSend(void *arg) {
 			memset(&buffer, 0, MAXSIZE);
 
 			tempNode->getbuffer(buffer);
-			//cout<<buffer<<endl;
 			send(st, buffer, strlen(buffer), 0);
 
 			cout<<"已经向"<<st<<"发送了"<<buffer<<endl;
@@ -53,9 +48,10 @@ static void epollSend(void *arg) {
 /***********************************************************************/
 static void epollAnalyze(void *arg) {
 	cout<<"处理线程启动"<<endl;
-	// struct serverAnalyze *balabala = (struct serverAnalyze *)arg;
-	// cacheLinkTable *sendTable = (*balabala).pSendTable;
-	// cacheLinkTable *recvTable = (*balabala).pRecvTable;
+	struct serverAnalyze *balabala = (struct serverAnalyze *)arg;
+	cacheLinkTable *sendTable = (*balabala).pSendTable;
+	cacheLinkTable *recvTable = (*balabala).pRecvTable;
+	onlineDevice *pOnlineDevice = (*balabala).onlineDeviceTable;
 
 	char buffer[MAXSIZE];
 	memset(&buffer, 0, sizeof(buffer));
@@ -69,29 +65,34 @@ static void epollAnalyze(void *arg) {
 			pthread_mutex_lock(&RecvMutex);
 			cout<<"正在处理一条信息"<<endl;
 			cacheLinkNode *tempLinkNode = recvTable->getEndNode();
+			pthread_mutex_unlock(&RecvMutex);
 
-			cacheLinkNode *insertSendTableNode = new cacheLinkNode();
+			//cacheLinkNode *insertSendTableNode = new cacheLinkNode();
 
 			//------------------------------
 			//messageBuffer *message = new messageBuffer();
 
 			tempLinkNode->getbuffer(buffer);
+
+			if(buffer[0] == '1')
+				pOnlineDevice->searchNode();
 			//set buffer
-			pServerAnalyze->setBuffer(buffer);
-			pServerAnalyze->judgeBuffer();
+			//pServerAnalyze->setBuffer(buffer);
+			//pServerAnalyze->judgeBuffer();
 			//-------------------------------
 
 			//tempLinkNode->copyLinkNode(insertSendTableNode);
 
-			pthread_mutex_unlock(&RecvMutex);
+			
+
 			cout<<"信息处理完毕"<<endl;
 			//break;
 
-			pthread_mutex_lock(&SendMutex);
-			cout<<"正在加入发送队列"<<endl;
+			//pthread_mutex_lock(&SendMutex);
+			//cout<<"正在加入发送队列"<<endl;
 			//sendTable->insertNode(insertSendTableNode);
-			pthread_mutex_unlock(&SendMutex);
-			cout<<"添加完成"<<endl;
+			//pthread_mutex_unlock(&SendMutex);
+			//cout<<"添加完成"<<endl;
 
 		}
 
@@ -112,10 +113,10 @@ private:
 	int iThreadNum;
 	int shutdown;
 public:
-	threadControl(int threadNum, cacheLinkTable *pSendTable, cacheLinkTable *pRecvTable) {
+	threadControl(int threadNum, cacheLinkTable *pSendTable, cacheLinkTable *pRecvTable, onlineDevice *pOnlineDevice) {
 		iThreadNum = threadNum;
 		//cout<<"000"<<endl;
-		pThreadPool = new threadPool(iThreadNum, pSendTable, pRecvTable);
+		pThreadPool = new threadPool(iThreadNum, pSendTable, pRecvTable, pOnlineDevice);
 		//cout<<"999"<<endl;
 		shutdown = 1;
 	}
@@ -139,7 +140,7 @@ public:
 		threadPool *threadPool = newPoint->pThreadPool;
 
 		while(1) {
-			cout<<"threadNum"<<threadPool->getThreadNum()<<endl;
+			cout<<"threadNum"<<threadPool->getFreeThread()<<endl;
 			sleep(6);
 			cout<<"sendTableNodeNum"<<sendTable->getNodeNum()<<endl;
 			cout<<"recvTableNodeNum"<<recvTable->getNodeNum()<<endl;
@@ -153,6 +154,11 @@ public:
 				newPoint->pThreadPool->allocThread(epollAnalyze);
 			}
 
+			/*
+			if(recvTable->getNodeNum == 0) {
+				newPoint->pThreadPool->allocThread()
+			}
+			*/
 			cout<<"show thread flag info"<<endl;
 			for(int  i = 0; i  <  3; i++){
 				//cout<<threadPool[i]->getThread()<<endl;
